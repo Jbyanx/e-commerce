@@ -23,7 +23,7 @@ public class InventoryService {
     private final RabbitTemplate rabbitTemplate;
 
     public void reserveInventory(ReserveInventoryCommand cmd) {
-        log.info("🔹 Reservando inventario para producto {} (orden: {})", cmd.productId(), cmd.orderId());
+        log.info("Reservando inventario para producto {} (orden: {})", cmd.productId(), cmd.orderId());
 
         inventoryRepository.findByProductId(cmd.productId()).ifPresentOrElse(item -> {
             if (item.getAvailableQuantity() >= cmd.quantity()) {

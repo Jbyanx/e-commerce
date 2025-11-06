@@ -2,8 +2,12 @@ spring:
   application:
     name: inventory-service
 
+  config:
+    import:
+      optional:configserver:
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/inventory_db
+    url: jdbc:postgresql://localhost:55432/inventory_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -21,6 +25,10 @@ spring:
     port: 5672
     username: admin
     password: admin
+
+  sql:
+    init:
+      mode: always
 
 server:
   port: 8082
