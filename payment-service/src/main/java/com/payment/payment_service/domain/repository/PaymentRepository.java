@@ -1,13 +1,15 @@
+package com.ecommerce.payment.domain.repository;
+
+import com.ecommerce.payment.domain.model.Payment;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface PaymentRepository {
-    Payment save(Payment payment);
-    //get by id payment
-    Optional<Payment> findById(Long id);
+@Repository
+public interface PaymentRepository extends JpaRepository<Payment, UUID> {
     Optional<Payment> findByOrderId(String orderId);
-    List<Payment> findAll();
-    void delete(Payment payment);
-    void deleteAll();
-    
+    List<Payment> findAllByOrderId(String orderId);
 }
