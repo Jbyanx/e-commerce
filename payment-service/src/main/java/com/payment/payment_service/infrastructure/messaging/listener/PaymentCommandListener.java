@@ -1,5 +1,6 @@
 package com.payment.payment_service.infrastructure.messaging.listener;
 
+import com.payment.payment_service.config.RabbitKeys;
 import com.payment.payment_service.config.RabbitMQConfig;
 import com.payment.payment_service.domain.model.Payment;
 import com.payment.payment_service.application.dto.ProcessPaymentCommand;
@@ -21,7 +22,7 @@ public class PaymentCommandListener {
     private final PaymentService paymentService;
     private final PaymentEventPublisher eventPublisher;
 
-    @RabbitListener(queues = RabbitMQConfig.PAYMENT_COMMAND_QUEUE)
+    @RabbitListener(queues = RabbitKeys.PAYMENT_EVENTS_QUEUE)
     public void handleProcessPaymentCommand(ProcessPaymentCommand command) {
         log.info("Received ProcessPaymentCommand for order: {}", command.getOrderId());
 

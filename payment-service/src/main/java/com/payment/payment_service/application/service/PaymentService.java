@@ -54,8 +54,8 @@ public class PaymentService {
     /**
      * Simula el procesamiento de un pago.
      * Reglas:
-     * - Si el monto es mayor a 1000, el pago falla
-     * - Si el monto es menor o igual a 1000, hay un 80% de probabilidad de éxito
+     * - Si el monto es mayor a 10000, el pago falla
+     * - Si el monto es menor o igual a 1000, hay un 95% de probabilidad de éxito
      */
     private boolean simulatePaymentProcessing(BigDecimal amount) {
         try {
@@ -66,12 +66,12 @@ public class PaymentService {
         }
 
         // Lógica de negocio simulada
-        if (amount.compareTo(new BigDecimal("1000")) > 0) {
+        if (amount.compareTo(new BigDecimal("10000")) > 0) {
             log.debug("Payment rejected: amount exceeds limit");
             return false;
         }
 
-        // 80% de probabilidad de éxito para montos <= 1000
-        return random.nextDouble() < 0.8;
+        // 95% de probabilidad de éxito para montos <= 10000
+        return random.nextDouble() < 0.95;
     }
 }

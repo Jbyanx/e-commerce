@@ -12,7 +12,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
-import static com.unimagdalena.inventory_service.config.RabbitConfig.INVENTORY_EXCHANGE;
+import static com.unimagdalena.inventory_service.config.RabbitKeys.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,16 +35,16 @@ public class InventoryService {
                 var event = new InventoryReservedEvent(
                         cmd.orderId(), cmd.productId(), cmd.quantity(), total
                 );
-                rabbitTemplate.convertAndSend(INVENTORY_EXCHANGE, "inventory.reserved", event);
+                rabbitTemplate.convertAndSend(ORDER_EXCHANGE, INVENTORY_RESERVED, event);
                 log.info("Inventario reservado y evento enviado: {}", event);
             } else {
                 var event = new InventoryRejectedEvent(cmd.orderId(), cmd.productId(), cmd.quantity());
-                rabbitTemplate.convertAndSend(INVENTORY_EXCHANGE, "inventory.rejected", event);
+                rabbitTemplate.convertAndSend(ORDER_EXCHANGE, INVENTORY_REJECTED, event);
                 log.warn("Inventario insuficiente para producto {}", cmd.productId());
             }
         }, () -> {
             var event = new InventoryRejectedEvent(cmd.orderId(), cmd.productId(), cmd.quantity());
-            rabbitTemplate.convertAndSend(INVENTORY_EXCHANGE, "inventory.rejected", event);
+            rabbitTemplate.convertAndSend(ORDER_EXCHANGE, INVENTORY_REJECTED, event);
             log.warn("Producto {} no encontrado en inventario", cmd.productId());
         });
     }
@@ -57,7 +57,7 @@ public class InventoryService {
             inventoryRepository.save(item);
 
             var event = new InventoryReleasedEvent(cmd.orderId(), cmd.productId(), cmd.quantity());
-            rabbitTemplate.convertAndSend(INVENTORY_EXCHANGE, "inventory.released", event);
+            rabbitTemplate.convertAndSend(ORDER_EXCHANGE, INVENTORY_RELEASE, event);
             log.info("Inventario liberado y evento enviado: {}", event);
         });
     }
