@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+  #RabbitMQ compartido por todos
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: saga-rabbitmq
+    ports:
+      - "5672:5672"   # conexión AMQP (Spring)
+      - "15672:15672" # panel web
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    networks:
+      - saga-net
+
+  # Base de datos para order-service
+  mysql-order:
+    image: mysql:8
+    container_name: mysql-order
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: order_db
+      #MYSQL_USER: root
+      #MYSQL_PASSWORD: root123
+    ports:
+      - "33306:3306"
+    volumes:
+      - order_data:/var/lib/mysql
+    networks:
+      - saga-net
+
+  # Base de datos para inventory-service
+  postgres-inventory:
+    image: postgres:16
+    container_name: postgres-inventory
+    restart: always
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "55432:5432"
+    volumes:
+      - inventory_data:/var/lib/postgresql/data
+    networks:
+      - saga-net
+
+networks:
+  saga-net:
+    driver: bridge
+
+volumes:
+  order_data:
+  inventory_data:
