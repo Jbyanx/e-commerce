@@ -4,6 +4,7 @@ package com.payment.payment_service.infrastructure.messaging.publisher;
 
 import com.payment.payment_service.application.dto.PaymentCompletedEvent;
 import com.payment.payment_service.application.dto.PaymentFailedEvent;
+import com.payment.payment_service.config.RabbitKeys;
 import com.payment.payment_service.config.RabbitMQConfig;
 import com.payment.payment_service.domain.model.Payment;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ public class PaymentEventPublisher {
         log.info("Publishing PaymentCompletedEvent for order: {}", payment.getOrderId());
         
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.PAYMENT_EXCHANGE,
-                RabbitMQConfig.PAYMENT_COMPLETED_ROUTING_KEY,
+                RabbitKeys.ORDER_EXCHANGE,
+                RabbitKeys.PAYMENT_COMPLETED,
                 event
         );
     }
@@ -49,8 +50,8 @@ public class PaymentEventPublisher {
         log.info("Publishing PaymentFailedEvent for order: {}", payment.getOrderId());
         
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.PAYMENT_EXCHANGE,
-                RabbitMQConfig.PAYMENT_FAILED_ROUTING_KEY,
+                RabbitKeys.ORDER_EXCHANGE,
+                RabbitKeys.PAYMENT_FAILED,
                 event
         );
     }
@@ -66,8 +67,8 @@ public class PaymentEventPublisher {
         log.info("Publishing PaymentFailedEvent for order: {} (system error)", orderId);
         
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.PAYMENT_EXCHANGE,
-                RabbitMQConfig.PAYMENT_FAILED_ROUTING_KEY,
+                RabbitKeys.ORDER_EXCHANGE,
+                RabbitKeys.PAYMENT_FAILED,
                 event
         );
     }
